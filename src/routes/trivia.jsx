@@ -17,6 +17,7 @@ function Trivia() {
   // 1: wrong
   // 2: not chosen
   const [result, setResult] = useState(2);
+  const [isLoading, setIsLoading] = useState(true);
 
   const checkAnswer = () => {
     setDisabled(true);
@@ -27,7 +28,7 @@ function Trivia() {
       setResult(1);
   }
 
-  const fetchNewTrivia = async () => {
+  const fetchNewTrivia = () => {
     fetch("https://the-trivia-api.com/questions?limit=1")
       .then(res => res.json())
       .then(res => {
@@ -35,42 +36,56 @@ function Trivia() {
         let index = Math.floor(Math.random() * 3) + 1;
         answerChoices.splice(index - 1, 0, res[0].correctAnswer);
         setTrivia({ question: res[0].question, answers: answerChoices, correctAnswer: res[0].correctAnswer});
+        setIsLoading(false);
       });
+
   };
   
   const next = () => {
+    fetchNewTrivia();
+
     setChosenAnswer(null);
     setResult(2);
     setDisabled(false);
-
-    fetchNewTrivia();
   }
 
   useEffect(fetchNewTrivia, []);
+
+  if(isLoading) {
+    return (
+      <div className="flex justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="w-10 h-10 border-4 border-double border-black rounded-lg animate-spin"></div>
+      </div>
+    )
+  }
 
   return (
     <div>
       <RadioGroup value={chosenAnswer} onChange={setChosenAnswer} disabled={disabled}>
         <RadioGroup.Label className="font-bold tracking-wide">{ trivia.question }</RadioGroup.Label>
-        {trivia.answers.map(answer => (
+        {trivia.answers.map((answer, i) => (
           <RadioGroup.Option
             value={answer}
-            className={({ active, checked }) =>
+            className={({ checked }) =>
               `
-              relative rounded-md my-2 px-4 py-2 bg-gray-100 transition-all hover:transition-all ease-in-out delay-50
-              ${active ? 'outline outline-4 outline-blue-700' : ''}
+              relative rounded-md my-2 px-4 py-2 bg-gray-100 transition-all hover:transition-all ease-in-out delay-75
+              hover:outline hover:outline-4 hover:outline-blue-700
               ${checked ? 'bg-blue-500 font-semibold text-zinc-100' : ''}
               ${checked && result == 0 ? 'bg-green-500' : ''}
-              ${checked && result == 1? 'bg-red-500' : ''}
+              ${checked && result == 1 ? 'bg-red-500' : ''}
+              ${result == 1 && answer == trivia.correctAnswer ? 'text-zinc-100 font-semibold bg-green-500' : ''}
               `
             }>
-            <RadioGroup.Label>{ answer }</RadioGroup.Label>
+            <RadioGroup.Label>{ String.fromCharCode(i + 65) + ") " + answer }</RadioGroup.Label>
           </RadioGroup.Option>
         ))}
       </RadioGroup>
-      <Button value="Check" onClick={checkAnswer} />
-      { result == 0 && <h1>Correct</h1> }
-      <Button value="Next" onClick={next} />
+
+      <div className="flex justify-between">
+        <Button value="Check" onClick={checkAnswer} />
+        <Button value="Next" onClick={next} />
+      </div>
+
     </div>
   );
 }
