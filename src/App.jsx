@@ -1,10 +1,10 @@
-import Nav from './components/Nav.jsx'
+import { Link } from 'react-router-dom'
 
 function App() {
 
   return (
     <div>
-      <Nav/>
+      <Link to="/trivia">Trivia</Link>
     </div>
   )
 }
