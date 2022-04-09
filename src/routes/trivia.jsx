@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { RadioGroup } from '@headlessui/react'
 
 import Button from '../components/Button'
+import Loader from '../components/Loader'
 
 function Trivia() {
 
@@ -52,23 +53,19 @@ function Trivia() {
   useEffect(fetchNewTrivia, []);
 
   if(isLoading) {
-    return (
-      <div className="flex justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="w-10 h-10 border-4 border-double border-black rounded-lg animate-spin"></div>
-      </div>
-    )
+    return <Loader />
   }
 
   return (
     <div>
       <RadioGroup value={chosenAnswer} onChange={setChosenAnswer} disabled={disabled}>
-        <RadioGroup.Label className="font-bold tracking-wide">{ trivia.question }</RadioGroup.Label>
+        <RadioGroup.Label className="font-heading font-bold tracking-wide">{ trivia.question }</RadioGroup.Label>
         {trivia.answers.map((answer, i) => (
           <RadioGroup.Option
             value={answer}
             className={({ checked }) =>
               `
-              relative rounded-md my-2 px-4 py-2 bg-gray-100 transition-all hover:transition-all ease-in-out delay-75
+              relative rounded-md my-2 px-4 py-2 bg-gray-100 transition-all hover:transition-all ease-in-out delay-75 font-heading-2
               hover:outline hover:outline-4 hover:outline-blue-700
               ${checked ? 'bg-blue-500 font-semibold text-zinc-100' : ''}
               ${checked && result == 0 ? 'bg-green-500' : ''}

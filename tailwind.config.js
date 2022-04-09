@@ -4,8 +4,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'nav-heading': ['"Exo"']
-      }
+        'nav-heading': ['"Exo"'],
+        'heading': ['"Rubik"'],
+        'heading-2': ['"Ubuntu"'],
+        'desc': ['"Lato"'],
+      },
     },
   },
   plugins: [],

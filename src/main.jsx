@@ -9,15 +9,17 @@ import {
 } from 'react-router-dom'
 import Nav from './components/Nav'
 import Trivia from './routes/trivia'
+import News from './routes/news'
 
 ReactDOM.render(
   <React.StrictMode>
     <Nav />
-    <main className="px-4">
+    <main className="p-4 bg-neutral-100 h-screen text-gray-800">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/trivia" element={<Trivia />} />
+          <Route path="/news" element={<News />} />
         </Routes>
       </BrowserRouter>
     </main>
