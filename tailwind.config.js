@@ -9,6 +9,9 @@ module.exports = {
         'heading-2': ['"Ubuntu"'],
         'desc': ['"Lato"'],
       },
+      colors: {
+        'accent': '#0098FA'
+      }
     },
   },
   plugins: [],

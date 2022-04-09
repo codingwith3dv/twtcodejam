@@ -65,12 +65,13 @@ function Trivia() {
             value={answer}
             className={({ checked }) =>
               `
-              relative rounded-md my-2 px-4 py-2 bg-gray-100 transition-all hover:transition-all ease-in-out delay-75 font-heading-2
-              hover:outline hover:outline-4 hover:outline-blue-700
-              ${checked ? 'bg-blue-500 font-semibold text-zinc-100' : ''}
-              ${checked && result == 0 ? 'bg-green-500' : ''}
-              ${checked && result == 1 ? 'bg-red-500' : ''}
-              ${result == 1 && answer == trivia.correctAnswer ? 'text-zinc-100 font-semibold bg-green-500' : ''}
+              relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
+              border border-slate-700 border-4
+              hover:border-blue-700 box-border
+              ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
+              ${checked && result == 0 ? 'bg-green-500 border-green-500' : ''}
+              ${checked && result == 1 ? 'bg-red-500 border-red-500' : ''}
+              ${result == 1 && answer == trivia.correctAnswer ? 'text-zinc-100 font-semibold bg-green-500 border-green-500' : ''}
               `
             }>
             <RadioGroup.Label>{ String.fromCharCode(i + 65) + ") " + answer }</RadioGroup.Label>

@@ -5,11 +5,11 @@ import Loader from '../components/Loader'
 const NewsCard = (props) => {
   return (
     <a href={ props.url } target="blank">
-      <div className="flex flex-col p-4 h-full rounded-lg bg-neutral-100 shadow-lg hover:shadow-slate-300 hover:shadow-xl transition-all delay-75 border border-bg-gray">
+      <div className="flex flex-col p-4 h-full rounded-lg bg-slate-800 shadow-md hover:shadow-zinc-700 hover:shadow-lg transition-all delay-75 border border-slate-700">
         <img className="w-full h-40 max-h-40 bg-slate-300 rounded-md mb-4" src={ props.urlToImage } />
         <div>
           <h1 className="font-semibold text-xl font-heading-2">{ props.title }</h1>
-          <p className="text-sm">{ props.description }</p>
+          <p className="mt-2 text-sm">{ props.description }</p>
           <p className="mt-4">Source: <p className="font-medium inline">{ props.source.name }</p></p>
         </div>
       </div>
@@ -52,11 +52,11 @@ for(let i = 0; i < 20; i++) {
 }
 
 function News() {
-  const [articles, setArticles] = useState(testArticles);
+  const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchLatestHeadlines = () => {
-    fetch("https://newsapi.org/v2/top-headlines?country=us&apiKey=f2dc7b0c44d14a6f8f3481349183054e")
+    fetch("https://newsapi.org/v2/top-headlines?pageSize=20&country=us&apiKey=f2dc7b0c44d14a6f8f3481349183054e")
     .then(res => res.json())
     .then(res => {
       setArticles(res.articles);
