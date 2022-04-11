@@ -3,14 +3,17 @@ import { useState, useEffect} from 'react'
 import Loader from '../components/Loader'
 
 const NewsCard = (props) => {
+  let str = props?.content;
+  let content = str?.slice(0, str?.lastIndexOf("["));
+
   return (
     <a href={ props.url } target="blank">
-      <div className="flex flex-col p-4 h-full rounded-lg bg-slate-800 shadow-md hover:shadow-zinc-700 hover:shadow-lg transition-all delay-75 border border-slate-700">
+      <div className="flex flex-col p-4 h-full rounded-lg bg-slate-800 shadow-md hover:shadow-zinc-700 hover:shadow-md transition-all delay-75 border border-slate-700">
         <img className="w-full h-40 max-h-40 bg-slate-300 rounded-md mb-4" src={ props.urlToImage } />
-        <div>
+        <div className="flex flex-col h-full">
           <h1 className="font-semibold text-xl font-heading-2">{ props.title }</h1>
-          <p className="mt-2 text-sm">{ props.description }</p>
-          <p className="mt-4">Source: <p className="font-medium inline">{ props.source.name }</p></p>
+          <p className="my-2 text-sm">{ content }</p>
+          <p className="mt-auto">Source: <p className="font-medium inline">{ props.source.name }</p></p>
         </div>
       </div>
     </a>
@@ -71,7 +74,7 @@ function News() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 sm:p-6 lg:p-8">
       <h1 className="font-bold text-2xl mb-2 font-heading">Today's headlines</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {articles.map(article => (

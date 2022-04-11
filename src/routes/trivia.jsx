@@ -57,7 +57,7 @@ function Trivia() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 sm:p-6 lg:p-8">
       <RadioGroup value={chosenAnswer} onChange={setChosenAnswer} disabled={disabled}>
         <RadioGroup.Label className="font-heading font-bold tracking-wide">{ trivia.question }</RadioGroup.Label>
         {trivia.answers.map((answer, i) => (
@@ -79,7 +79,7 @@ function Trivia() {
         ))}
       </RadioGroup>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between md:justify-around">
         <Button value="Check" onClick={checkAnswer} />
         <Button value="Next" onClick={next} />
       </div>

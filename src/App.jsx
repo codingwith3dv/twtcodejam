@@ -26,7 +26,8 @@ function App() {
 
   return (
     <div>
-      <section className="bg-gradient-to-tl from-violet-800 via-blue-800 to-violet-800 flex items-center justify-between flex-col gap-2 mb-4 md:flex-row p-4 h-3/4">
+      <section className="bg-gradient-to-tl from-purple-900 via-blue-900 to-violet-900 flex items-center justify-between flex-col gap-2 mb-4 md:flex-row p-4 sm:p-6 lg:p-8 h-3/4">
+        <div className="absolute" />
         <img className="md:max-w-md lg:max-w-xl md:order-2" src={HeroImg} />
         <div className="flex flex-col gap-2 max-w-prose">
           <h1 className="text-3xl font-heading font-black tracking-wide">Make your life less ordinary each day</h1>
@@ -40,14 +41,17 @@ function App() {
           </p>
         </div>
       </section>
-      <div className="flex flex-col gap-4 p-4">
-        {features.map(feature => (
-          <FeatureCard
-            {...feature}
-          >
-          </FeatureCard>
-        ))}
+      <div className="flex justify-center">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 lg:max-w-4xl gap-4 p-4 sm:p-6 lg:p-8">
+          {features.map(feature => (
+            <FeatureCard
+              {...feature}
+            >
+            </FeatureCard>
+          ))}
+        </div>
       </div>
+
     </div>
   )
 }
