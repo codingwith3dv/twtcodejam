@@ -14,7 +14,7 @@ import News from './routes/news'
 ReactDOM.render(
   <React.StrictMode>
     <Nav />
-    <main className="p-4 min-h-screen bg-slate-900 text-gray-200">
+    <main className="min-h-screen bg-slate-900 text-gray-200">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />

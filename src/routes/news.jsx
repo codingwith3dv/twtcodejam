@@ -71,7 +71,7 @@ function News() {
   }
 
   return (
-    <div>
+    <div className="p-4">
       <h1 className="font-bold text-2xl mb-2 font-heading">Today's headlines</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {articles.map(article => (

@@ -57,7 +57,7 @@ function Trivia() {
   }
 
   return (
-    <div>
+    <div className="p-4">
       <RadioGroup value={chosenAnswer} onChange={setChosenAnswer} disabled={disabled}>
         <RadioGroup.Label className="font-heading font-bold tracking-wide">{ trivia.question }</RadioGroup.Label>
         {trivia.answers.map((answer, i) => (
