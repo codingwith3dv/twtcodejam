@@ -19,6 +19,14 @@ const features = [
       everyday can increase your points!
     `,
     route: '/news'
+  },
+  {
+    heading: 'More Vocabulary',
+    description: `
+      Understanding what a word means is so much important. Vocabulary is the foundation for good
+      communication skills. Learn about more words, their meanings, synonymns, antonymns and many more...
+    `,
+    route: '/vocabulary'
   }
 ];
 
