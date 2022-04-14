@@ -37,7 +37,7 @@ function Vocabulary() {
     },
   ]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [testQuestions, setTestQuestions] = useState([]);
 
   const [chosen, setChosen] = useState(null);
@@ -47,16 +47,14 @@ function Vocabulary() {
   // 2: not chosen
   const [result, setResult] = useState(2);
   const [disabled, setDisabled] = useState(false);
-  const [shouldShow, setShouldShow] = useState(true);
+  const [score, setScore] = useState(0);
 
   const next = () => {
-    setShouldShow(false);
     setTimeout(() => {
-      setQuestionIndex(questionIndex == 4 ? 0 : questionIndex + 1);
+      setQuestionIndex(questionIndex == 4 ? questionIndex : questionIndex + 1);
       setResult(2);
       setDisabled(false);
       setChosen(null);
-      setShouldShow(true);
     }, 1000)
   }
 
@@ -90,12 +88,12 @@ function Vocabulary() {
   }
 
   const getInfoAboutWord = async () => {
-    let _words = [];
+    /* let _words = [];
     for(let i = 0; i < 5; i++) {
-      const wordData = (await (await fetch('https://san-random-words.vercel.app')).json());
+      const wordData = (await (await fetch('https://random-words-api.vercel.app/word')).json());
       _words.push(wordData[0]);
     }
-    setWords(_words);
+    setWords(_words); */
     setIsLoading(false);
   }
   
@@ -118,10 +116,12 @@ function Vocabulary() {
     setDisabled(true);
 
     let currentQuestion = testQuestions[questionIndex];
-    if(currentQuestion.correctAnswer == value)
+    if(currentQuestion.correctAnswer == value) {
       setResult(0);
-    else
+      setScore(score + 50);
+    } else {
       setResult(1);
+    }
 
     setChosen(value);
     next();
@@ -146,14 +146,18 @@ function Vocabulary() {
             bg-black bg-opacity-50 filter
             backdrop-blur-sm">
             <div className="bg-gray-800 w-full m-4 md:m-6 lg:m-8 relative p-4 md:p-6 lg:p-8 rounded-lg shadow shadow-zinc-700 shadow-sm">
-              <div className="flex flex-row justify-between">
-                <h1 className="text-xl font-bold font-heading">Ready to test what you learned?</h1>
+              <div className="flex flex-row justify-between items-cente items-center">
+                <h1 className="text-gray-400 text-md font-bold font-heading">Ready to test what you learned?</h1>
                 <button onClick={closeDialog} className="flex justify-center items-center w-8 h-8 bg-gray-600 self-start font-heading rounded-md hover:ring ring-gray-500 ring-2">x</button>
               </div>
 
-              <RadioGroup className="my-4" value={chosen} onChange={v => { check(v); }} disabled={disabled}>
+              <div className="flex justify-center my-6">
+                <h1 key={score} className="text-3xl font-heading stacked-fractions"><div className="inline-block font-bold animate animate-num">{ score }</div> / { 5 * 50 }</h1>
+              </div>
+
+              <RadioGroup className="mt-4" value={chosen} onChange={v => { check(v); }} disabled={disabled}>
                 <div>
-                  <RadioGroup.Label className="text-lg font-medium font-heading-2">{ testQuestions[questionIndex].question }</RadioGroup.Label>
+                  <RadioGroup.Label className="text-lg font-semibold font-heading-2 text-gray-300">{ testQuestions[questionIndex].question }</RadioGroup.Label>
                   {testQuestions[questionIndex].answers.map((answer, j) => (
                     <RadioGroup.Option
                       value={answer}
