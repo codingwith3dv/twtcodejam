@@ -79,7 +79,7 @@ function Trivia() {
         ))}
       </RadioGroup>
 
-      <div className="flex justify-between md:justify-around">
+      <div className="flex justify-between md:justify-around ">
         <Button value="Check" onClick={checkAnswer} />
         <Button value="Next" onClick={next} />
       </div>

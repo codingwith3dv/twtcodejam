@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Loader from '../components/Loader'
 import Button from '../components/Button'
 
-import { RadioGroup } from '@headlessui/react'
+import { RadioGroup, Transition } from '@headlessui/react'
 
 function Word(props) {
   return (
@@ -46,9 +46,18 @@ function Vocabulary() {
   // 1: wrong
   // 2: not chosen
   const [result, setResult] = useState(2);
+  const [disabled, setDisabled] = useState(false);
+  const [shouldShow, setShouldShow] = useState(true);
 
   const next = () => {
-    setQuestionIndex(questionIndex + 1);
+    setShouldShow(false);
+    setTimeout(() => {
+      setQuestionIndex(questionIndex == 4 ? 0 : questionIndex + 1);
+      setResult(2);
+      setDisabled(false);
+      setChosen(null);
+      setShouldShow(true);
+    }, 1000)
   }
 
   const getRandomIndex = (len, except) => {
@@ -91,6 +100,7 @@ function Vocabulary() {
   }
   
   useEffect(getInfoAboutWord, []);
+  useEffect(buildTest, [words]);
 
   if(isLoading) {
     return <Loader />
@@ -101,18 +111,20 @@ function Vocabulary() {
   }
 
   const openDialog = () => {
-    buildTest();
-    next();
     setIsOpen(true);
   }
 
   const check = (value) => {
-    setChosen(value);
+    setDisabled(true);
 
     let currentQuestion = testQuestions[questionIndex];
-    setResult(currentQuestion.correctAnswer == chosen
-      ? 0
-      : 1)
+    if(currentQuestion.correctAnswer == value)
+      setResult(0);
+    else
+      setResult(1);
+
+    setChosen(value);
+    next();
   }
 
   return (
@@ -139,23 +151,27 @@ function Vocabulary() {
                 <button onClick={closeDialog} className="flex justify-center items-center w-8 h-8 bg-gray-600 self-start font-heading rounded-md hover:ring ring-gray-500 ring-2">x</button>
               </div>
 
-              <RadioGroup className="my-4" value={chosen} onChange={check}>
-                <RadioGroup.Label className="text-lg font-medium font-heading-2">{ testQuestions[questionIndex].question }</RadioGroup.Label>
-                {testQuestions[questionIndex].answers.map((answer, j) => (
-                  <RadioGroup.Option
-                    value={answer}
-                    key={answer}
-                    className={({ checked }) =>
-                      `
-                      relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
-                      border border-slate-700 border-4
-                      hover:border-blue-700 box-border
-                      ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
-                      `
-                    }>
-                    <RadioGroup.Label>{ String.fromCharCode(j + 65) + ") " + answer }</RadioGroup.Label>
-                  </RadioGroup.Option>
-                ))}
+              <RadioGroup className="my-4" value={chosen} onChange={v => { check(v); }} disabled={disabled}>
+                <div>
+                  <RadioGroup.Label className="text-lg font-medium font-heading-2">{ testQuestions[questionIndex].question }</RadioGroup.Label>
+                  {testQuestions[questionIndex].answers.map((answer, j) => (
+                    <RadioGroup.Option
+                      value={answer}
+                      key={answer}
+                      className={({ checked }) =>
+                        `
+                        relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
+                        border border-slate-700 border-4
+                        hover:border-blue-700 box-border
+                        ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
+                        ${checked && result == 0 ? 'bg-green-500 border-green-500' : ''}
+                        ${checked && result == 1 ? 'bg-red-500 border-red-500' : ''}
+                        `
+                      }>
+                      <RadioGroup.Label>{ String.fromCharCode(j + 65) + ") " + answer }</RadioGroup.Label>
+                    </RadioGroup.Option>
+                  ))}
+                </div>
               </RadioGroup>
             </div>
           </div>
