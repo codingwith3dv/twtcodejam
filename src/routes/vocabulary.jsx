@@ -42,6 +42,10 @@ function Vocabulary() {
 
   const [chosen, setChosen] = useState(null);
   const [questionIndex, setQuestionIndex] = useState(0);
+  // 0: right
+  // 1: wrong
+  // 2: not chosen
+  const [result, setResult] = useState(2);
 
   const next = () => {
     setQuestionIndex(questionIndex + 1);
@@ -102,6 +106,15 @@ function Vocabulary() {
     setIsOpen(true);
   }
 
+  const check = (value) => {
+    setChosen(value);
+
+    let currentQuestion = testQuestions[questionIndex];
+    setResult(currentQuestion.correctAnswer == chosen
+      ? 0
+      : 1)
+  }
+
   return (
     <div className="p-4">
       <h1 className="text-2xl mb-2 font-heading font-bold">New words for today</h1>
@@ -126,7 +139,7 @@ function Vocabulary() {
                 <button onClick={closeDialog} className="flex justify-center items-center w-8 h-8 bg-gray-600 self-start font-heading rounded-md hover:ring ring-gray-500 ring-2">x</button>
               </div>
 
-              <RadioGroup className="my-4" value={chosen} onChange={setChosen}>
+              <RadioGroup className="my-4" value={chosen} onChange={check}>
                 <RadioGroup.Label className="text-lg font-medium font-heading-2">{ testQuestions[questionIndex].question }</RadioGroup.Label>
                 {testQuestions[questionIndex].answers.map((answer, j) => (
                   <RadioGroup.Option
