@@ -40,12 +40,11 @@ function Vocabulary() {
   const [isOpen, setIsOpen] = useState(false);
   const [testQuestions, setTestQuestions] = useState([]);
 
-  const [testQuestion, setTestQuestion] = useState({});
   const [chosen, setChosen] = useState(null);
-  let questionIndex = 0;
+  const [questionIndex, setQuestionIndex] = useState(0);
 
   const next = () => {
-    setTestQuestion(testQuestions[questionIndex++]);
+    setQuestionIndex(questionIndex + 1);
   }
 
   const getRandomIndex = (len, except) => {
@@ -99,7 +98,6 @@ function Vocabulary() {
 
   const openDialog = () => {
     buildTest();
-    questionIndex = 0;
     next();
     setIsOpen(true);
   }
@@ -129,10 +127,11 @@ function Vocabulary() {
               </div>
 
               <RadioGroup className="my-4" value={chosen} onChange={setChosen}>
-                <RadioGroup.Label className="text-lg font-medium font-heading-2"><span className="font-semibold">{ i + 1 + ") " }</span>{ testQuestion.question }</RadioGroup.Label>
-                {testQuestion.answers.map((answer, j) => (
+                <RadioGroup.Label className="text-lg font-medium font-heading-2">{ testQuestions[questionIndex].question }</RadioGroup.Label>
+                {testQuestions[questionIndex].answers.map((answer, j) => (
                   <RadioGroup.Option
                     value={answer}
+                    key={answer}
                     className={({ checked }) =>
                       `
                       relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
