@@ -10,7 +10,7 @@ module.exports = {
         'desc': ['"Lato"'],
       },
       colors: {
-        'accent': '#0e42ed'
+        'accent': '#7c3aed'
       }
     },
   },
