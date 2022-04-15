@@ -18,16 +18,20 @@ module.exports = {
       keyframes: {
         'num': {
           '0%': {
-            transform: "translateY(0)"
+            transform: "translateY(0)",
+            opacity: 0.4
           },
           '33%': {
-            transform: "translateY(9px)"
+            transform: "translateY(9px)",
+            opacity: 0.6
           },
           '66%': {
-            transform: "translateY(-9px)"
+            transform: "translateY(-9px)",
+            opacity: 0.7
           },
           '100%': {
-            transform: "translateY(0)"
+            transform: "translateY(0)",
+            opacity: 1
           }
         }
       }

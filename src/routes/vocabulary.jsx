@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import Loader from '../components/Loader'
 import Button from '../components/Button'
+import Modal from '../components/Modal'
 
-import { RadioGroup, Transition } from '@headlessui/react'
+import { RadioGroup } from '@headlessui/react'
 
 function Word(props) {
   return (
@@ -138,48 +139,41 @@ function Vocabulary() {
       <Button value="Done, Go to Test" onClick={openDialog}/>
 
       {isOpen &&
-        <>
-          <div className="
-            flex justify-center items-center
-            overflow-x-hidden overflow-y-auto fixed
-            inset-0 z-50 outline-none focus:outline-none
-            bg-black bg-opacity-50 filter
-            backdrop-blur-sm">
-            <div className="bg-gray-800 w-full m-4 md:m-6 lg:m-8 relative p-4 md:p-6 lg:p-8 rounded-lg shadow shadow-zinc-700 shadow-sm">
-              <div className="flex flex-row justify-between items-cente items-center">
-                <h1 className="text-gray-400 text-md font-bold font-heading">Ready to test what you learned?</h1>
-                <button onClick={closeDialog} className="flex justify-center items-center w-8 h-8 bg-gray-600 self-start font-heading rounded-md hover:ring ring-gray-500 ring-2">x</button>
-              </div>
-
-              <div className="flex justify-center my-6">
-                <h1 key={score} className="text-3xl font-heading stacked-fractions"><div className="inline-block font-bold animate animate-num">{ score }</div> / { 5 * 50 }</h1>
-              </div>
-
-              <RadioGroup className="mt-4" value={chosen} onChange={v => { check(v); }} disabled={disabled}>
-                <div>
-                  <RadioGroup.Label className="text-lg font-semibold font-heading-2 text-gray-300">{ testQuestions[questionIndex].question }</RadioGroup.Label>
-                  {testQuestions[questionIndex].answers.map((answer, j) => (
-                    <RadioGroup.Option
-                      value={answer}
-                      key={answer}
-                      className={({ checked }) =>
-                        `
-                        relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
-                        border border-slate-700 border-4
-                        hover:border-blue-700 box-border
-                        ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
-                        ${checked && result == 0 ? 'bg-green-500 border-green-500' : ''}
-                        ${checked && result == 1 ? 'bg-red-500 border-red-500' : ''}
-                        `
-                      }>
-                      <RadioGroup.Label>{ String.fromCharCode(j + 65) + ") " + answer }</RadioGroup.Label>
-                    </RadioGroup.Option>
-                  ))}
-                </div>
-              </RadioGroup>
+        <Modal>
+          <div className="bg-gray-800 w-full m-4 md:m-6 lg:m-8 relative p-4 md:p-6 lg:p-8 rounded-lg shadow shadow-zinc-700 shadow-sm">
+            <div className="flex flex-row justify-between items-cente items-center">
+              <h1 className="text-gray-400 text-md font-bold font-heading">Ready to test what you learned?</h1>
+              <button onClick={closeDialog} className="flex justify-center items-center w-8 h-8 bg-gray-600 self-start font-heading font-black rounded-full hover:ring ring-gray-500 ring-2">x</button>
             </div>
+
+            <div className="flex justify-center my-6">
+              <h1 key={score} className="text-3xl font-heading stacked-fractions"><div className="inline-block font-bold animate animate-num">{ score }</div> / { 5 * 50 }</h1>
+            </div>
+
+            <RadioGroup className="mt-4" value={chosen} onChange={v => { check(v); }} disabled={disabled}>
+              <div>
+                <RadioGroup.Label className="text-lg font-semibold font-heading-2 text-gray-300">{ testQuestions[questionIndex].question }</RadioGroup.Label>
+                {testQuestions[questionIndex].answers.map((answer, j) => (
+                  <RadioGroup.Option
+                    value={answer}
+                    key={answer}
+                    className={({ checked }) =>
+                      `
+                      relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
+                      border border-slate-700 border-4
+                      hover:border-blue-700 box-border
+                      ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
+                      ${checked && result == 0 ? 'bg-green-500 border-green-500' : ''}
+                      ${checked && result == 1 ? 'bg-red-500 border-red-500' : ''}
+                      `
+                    }>
+                    <RadioGroup.Label>{ String.fromCharCode(j + 65) + ") " + answer }</RadioGroup.Label>
+                  </RadioGroup.Option>
+                ))}
+              </div>
+            </RadioGroup>
           </div>
-        </>
+        </Modal>
       }
     </div>
   );
