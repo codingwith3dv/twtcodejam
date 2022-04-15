@@ -14,7 +14,7 @@ function Word(props) {
   );
 }
 
-function Vocabulary() {
+function Vocabulary(props) {
   const [words, setWords] = useState([
     {
       word: 'Apocatastasis',

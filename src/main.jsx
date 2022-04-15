@@ -35,10 +35,10 @@ ReactDOM.render(
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/trivia" element={<Trivia />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/vocabulary" element={<Vocabulary />} />
+          <Route path="/" element={<App firebase={app}/>} />
+          <Route path="/trivia" element={<Trivia firebase={app}/>} />
+          <Route path="/news" element={<News firebase={app}/>} />
+          <Route path="/vocabulary" element={<Vocabulary firebase={app}/>} />
         </Routes>
       </BrowserRouter>
     </main>
