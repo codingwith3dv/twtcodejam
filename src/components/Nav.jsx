@@ -1,6 +1,6 @@
 import {
-  getAuth
-} from 'firebase/auth'
+  auth
+} from '../utils.js'
 import {
   useAuthState
 } from 'react-firebase-hooks/auth';
@@ -10,8 +10,7 @@ import { useState } from 'react'
 import Modal from './Modal'
 import SignInForm from './SignIn'
 
-function Nav(props) {
-  const auth = getAuth(props.firebase);
+function Nav() {
   const [user] = useAuthState(auth);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,7 +50,7 @@ function Nav(props) {
                 <button onClick={() => setModalOpen(false)} className="flex justify-center items-center w-8 h-8 bg-gray-600 self-start font-heading font-black rounded-full hover:ring ring-gray-500 ring-2 text-zinc-300">x</button>
               </div>
 
-              { user ? <Account /> : <SignInForm firebase={props.firebase}/> }
+              { user ? <Account /> : <SignInForm /> }
             </div>
           </Modal>
         }

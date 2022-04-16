@@ -1,7 +1,11 @@
+import {
+  db,
+  auth
+} from '../utils.js'
+
 import { useState } from 'react'
 
 import {
-  getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword
 } from 'firebase/auth'
@@ -10,7 +14,7 @@ import {
   useSignInWithGithub
 } from 'react-firebase-hooks/auth'
 import {
-  getFirestore
+  setDoc, doc
 } from 'firebase/firestore'
 
 function SignInForm(props) {
@@ -19,8 +23,6 @@ function SignInForm(props) {
   const [userName, setUserName] = useState(null);
   const [register, setRegister] = useState(false);
   const [error, setError] = useState(null);
-  const auth = getAuth(props.firebase);
-  const db = getFirestore(props.firebase);
 
   const [
     signInWithGoogle,
@@ -73,7 +75,11 @@ function SignInForm(props) {
             onClick={async () => {
               if(register) {
                 createUserWithEmailAndPassword(auth, email, password)
-                  .then(() => {})
+                  .then(async (u) => {
+                    await setDoc(doc(db, "users", u.user.uid), {
+                      userName: userName
+                    })
+                  })
                   .catch(err => {
                     switch(err.code) {
                       case 'auth/email-already-in-use':
@@ -83,7 +89,8 @@ function SignInForm(props) {
                   });
               }
               signInWithEmailAndPassword(auth, email, password)
-                .then(() => {})
+                .then(() => {
+                })
                 .catch(err => {
                   switch(err.code) {
                     case 'auth/user-not-found':
