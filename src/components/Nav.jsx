@@ -9,19 +9,12 @@ import { useState } from 'react'
 
 import Modal from './Modal'
 import SignInForm from './SignIn'
+import Account from './Account'
 
 function Nav() {
   const [user] = useAuthState(auth);
 
   const [modalOpen, setModalOpen] = useState(false);
-
-  function Account() {
-    return (
-      <div>
-        <button onClick={() => { auth.signOut() }}>Sign Out</button>
-      </div>
-    );
-  }
 
   return (
     <div>
