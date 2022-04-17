@@ -7,12 +7,10 @@ import { useState } from 'react'
 
 import {
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider
 } from 'firebase/auth'
-import {
-  useSignInWithGoogle,
-  useSignInWithGithub
-} from 'react-firebase-hooks/auth'
 import {
   setDoc, doc
 } from 'firebase/firestore'
@@ -23,19 +21,6 @@ function SignInForm(props) {
   const [userName, setUserName] = useState(null);
   const [register, setRegister] = useState(false);
   const [error, setError] = useState(null);
-
-  const [
-    signInWithGoogle,
-    u0,
-    l0,
-    e0
-  ] = useSignInWithGoogle(auth);
-  const [
-    signInWithGithub,
-    u1,
-    l1,
-    e1
-  ] = useSignInWithGithub(auth);
 
   return (
     <div>
@@ -124,7 +109,14 @@ function SignInForm(props) {
               border-accent font-bold text-violet-300
             "
             onClick={() => {
-              signInWithGoogle();
+              signInWithPopup(auth, new GoogleAuthProvider())
+                .then(async(res) => {
+                  await setDoc(doc(db, "users", res.user.uid), {
+                    userName: res.user.displayName,
+                    score: 0,
+                    maxQns: 5
+                  })
+                })
             }}
             >
             Continue With Google
