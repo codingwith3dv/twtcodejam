@@ -12,6 +12,7 @@ import {
 function Account() {
   const [userName, setUserName] = useState("");
   const [totalScore, setTotal] = useState(0);
+  const [maxQns, setMaxQns] = useState(5);
   useEffect(() => {
     const getUserName = async () => {
       const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
@@ -31,6 +32,10 @@ function Account() {
       <div className="pt-2">
         <div className="text-zinc-400 font-light font-heading text-md mb-2">Preferences</div>
         <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <p className="text-zinc-400 font-heading-2">Max words in vocabulary: { maxQns }</p>
+            <input className="accent-violet-400" type="range" min="5" max="10" value={maxQns} onInput={e => { setMaxQns(e.target.value); }} />
+          </div>
         </div>
       </div>
 
