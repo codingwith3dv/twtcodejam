@@ -50,6 +50,7 @@ function Trivia() {
   }
 
   const checkAnswer = () => {
+    if(!chosenAnswer) return;
     setDisabled(true);
 
     if(chosenAnswer == trivia.correctAnswer) {
