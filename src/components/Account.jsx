@@ -6,7 +6,7 @@ import {
 } from '../utils.js'
 
 import {
-  doc, getDoc
+  doc, getDoc, setDoc
 } from 'firebase/firestore'
 
 function Account() {
@@ -18,6 +18,7 @@ function Account() {
       const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
       setUserName(docSnap.data().userName);
       setTotal(docSnap.data().score);
+      setMaxQns(docSnap.data().maxQns);
     }
     getUserName();
   }, []);
@@ -33,8 +34,13 @@ function Account() {
         <div className="text-zinc-400 font-light font-heading text-md mb-2">Preferences</div>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <p className="text-zinc-400 font-heading-2">Max words in vocabulary: { maxQns }</p>
-            <input className="accent-violet-400" type="range" min="5" max="10" value={maxQns} onInput={e => { setMaxQns(e.target.value); }} />
+            <p className="text-zinc-400 text-sm font-heading-2">Max words in vocabulary: { maxQns }</p>
+            <input className="accent-violet-400" type="range" min="5" max="10" value={maxQns} onInput={e => {
+              setMaxQns(e.target.value); 
+              setDoc(doc(db, "users", auth.currentUser.uid), {
+                maxQns: e.target.value
+              }, { merge: true })
+            }} />
           </div>
         </div>
       </div>

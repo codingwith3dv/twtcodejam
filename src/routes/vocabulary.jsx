@@ -7,7 +7,7 @@ import { RadioGroup } from '@headlessui/react'
 
 import { db, auth } from '../utils.js'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { setDoc, doc, onSnapshot } from 'firebase/firestore'
+import { setDoc, getDoc, doc, onSnapshot } from 'firebase/firestore'
 
 function Word(props) {
   return (
@@ -20,7 +20,7 @@ function Word(props) {
 
 let unsubscribe;
 
-function Vocabulary(props) {
+function Vocabulary() {
   const [ user ] = useAuthState(auth);
 
   const [words, setWords] = useState([
@@ -62,18 +62,6 @@ function Vocabulary(props) {
   const [maxQns, setMaxQns] = useState(5);
   const [completed, setCompleted] = useState(false);
 
-  auth.onAuthStateChanged(u => {
-    if(u) {
-      unsubscribe = onSnapshot(
-        doc(db, "users", u.uid),
-        data => {
-          setTotal(data.data().score);
-        }
-      );
-    } else {
-      unsubscribe && unsubscribe();
-    }
-  });
 
   const updateScore = (inc) => {
     setScore(score + inc);
@@ -125,17 +113,36 @@ function Vocabulary(props) {
     setTestQuestions(_testQuestions);
   }
 
-  const getInfoAboutWord = async () => {
-    /* let _words = [];
-    for(let i = 0; i < maxQns; i++) {
+  const getInfoAboutWord = async (max) => {
+    let _words = [];
+    for (let i = 0; i < max; i++) {
       const wordData = (await (await fetch('https://random-words-api.vercel.app/word')).json());
       _words.push(wordData[0]);
     }
-    setWords(_words); */
+    setWords(_words);
     setIsLoading(false);
   }
   
-  useEffect(getInfoAboutWord, []);
+  auth.onAuthStateChanged(u => {
+    if(u) {
+      unsubscribe = onSnapshot(
+        doc(db, "users", u.uid),
+        data => {
+          setTotal(data.data().score);
+        }
+      );
+    } else {
+      unsubscribe && unsubscribe();
+    }
+  });
+  useEffect(() => {
+    const getMaxQns = async () => {
+      let dataSnap = await getDoc(doc(db, "users", user.uid));
+      setMaxQns(dataSnap.data().maxQns);
+      getInfoAboutWord(dataSnap.data().maxQns);
+    }
+    getMaxQns();
+  }, []);
   useEffect(buildTest, [words]);
 
   if(isLoading) {
@@ -222,7 +229,7 @@ function Vocabulary(props) {
                         hover:border-blue-700 box-border
                         ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
                         ${checked && result == 0 ? 'bg-green-500 border-green-500' : ''}
-                        ${checked && result == 1 ? 'bg-red-500 border-red-500' : ''}
+                        ${result == 1 ? 'bg-red-500 border-red-500' : ''}
                         `
                       }>
                       <RadioGroup.Label>{ String.fromCharCode(j + 65) + ") " + answer }</RadioGroup.Label>

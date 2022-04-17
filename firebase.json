@@ -3,6 +3,7 @@
     "rules": "src/database.rules.json"
   },
   "hosting": {
+    "site": "go-off-beat",
     "public": "dist",
     "ignore": [
       "firebase.json",

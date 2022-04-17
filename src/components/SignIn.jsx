@@ -78,7 +78,8 @@ function SignInForm(props) {
                   .then(async (u) => {
                     await setDoc(doc(db, "users", u.user.uid), {
                       userName: userName,
-                      score: 0
+                      score: 0,
+                      maxQns: 5
                     })
                   })
                   .catch(err => {
