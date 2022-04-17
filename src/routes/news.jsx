@@ -59,7 +59,7 @@ function News() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchLatestHeadlines = () => {
-    fetch("https://newsapi.org/v2/top-headlines?pageSize=20&country=us&apiKey=f2dc7b0c44d14a6f8f3481349183054e")
+    fetch("https://newsapi.org/v2/top-headlines?country=us&apiKey=f2dc7b0c44d14a6f8f3481349183054e")
     .then(res => res.json())
     .then(res => {
       setArticles(res.articles);

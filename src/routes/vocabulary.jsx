@@ -5,6 +5,10 @@ import Modal from '../components/Modal'
 
 import { RadioGroup } from '@headlessui/react'
 
+import { db, auth } from '../utils.js'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { setDoc, doc, onSnapshot } from 'firebase/firestore'
+
 function Word(props) {
   return (
     <div className="flex flex-col gap-none bg-slate-800 p-4 rounded-lg shadow-md shadow-zinc-700">
@@ -14,7 +18,11 @@ function Word(props) {
   );
 }
 
+let unsubscribe;
+
 function Vocabulary(props) {
+  const [ user ] = useAuthState(auth);
+
   const [words, setWords] = useState([
     {
       word: 'Apocatastasis',
@@ -38,7 +46,8 @@ function Vocabulary(props) {
     },
   ]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
   const [testQuestions, setTestQuestions] = useState([]);
 
   const [chosen, setChosen] = useState(null);
@@ -49,10 +58,38 @@ function Vocabulary(props) {
   const [result, setResult] = useState(2);
   const [disabled, setDisabled] = useState(false);
   const [score, setScore] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [maxQns, setMaxQns] = useState(5);
+  const [completed, setCompleted] = useState(false);
+
+  auth.onAuthStateChanged(u => {
+    if(u) {
+      unsubscribe = onSnapshot(
+        doc(db, "users", u.uid),
+        data => {
+          setTotal(data.data().score);
+        }
+      );
+    } else {
+      unsubscribe && unsubscribe();
+    }
+  });
+
+  const updateScore = (inc) => {
+    setScore(score + inc);
+    setDoc(doc(db, "users", user.uid), {
+      score: total + inc
+    }, { merge: true });
+  }
 
   const next = () => {
+    if(questionIndex == maxQns - 1) {
+      setCompleted(true);
+      return;
+    }
+
     setTimeout(() => {
-      setQuestionIndex(questionIndex == 4 ? questionIndex : questionIndex + 1);
+      setQuestionIndex(questionIndex + 1);
       setResult(2);
       setDisabled(false);
       setChosen(null);
@@ -90,7 +127,7 @@ function Vocabulary(props) {
 
   const getInfoAboutWord = async () => {
     /* let _words = [];
-    for(let i = 0; i < 5; i++) {
+    for(let i = 0; i < maxQns; i++) {
       const wordData = (await (await fetch('https://random-words-api.vercel.app/word')).json());
       _words.push(wordData[0]);
     }
@@ -119,7 +156,7 @@ function Vocabulary(props) {
     let currentQuestion = testQuestions[questionIndex];
     if(currentQuestion.correctAnswer == value) {
       setResult(0);
-      setScore(score + 50);
+      updateScore(50);
     } else {
       setResult(1);
     }
@@ -136,7 +173,23 @@ function Vocabulary(props) {
           <Word word={word.word} meaning={word.definition} />
         ))}
       </div>
-      <Button value="Done, Go to Test" onClick={openDialog}/>
+      <Button value="Done, Go to Test" onClick={() => { !user ? setSignInOpen(true) : openDialog()}}/>
+
+      {signInOpen &&
+        <Modal>
+          <div className="bg-gray-800 w-full m-4 md:m-6 lg:m-8 relative p-4 md:p-6 lg:p-8 rounded-lg shadow shadow-zinc-700 shadow-sm">
+            <div className="flex flex-row justify-between items-cente items-center">
+              <h1 className="text-gray-400 text-md font-bold font-heading">Please sign in or register to use!</h1>
+              <button onClick={() => setSignInOpen(false)} className="flex justify-center items-center w-8 h-8 bg-gray-600 self-start font-heading font-black rounded-full hover:ring ring-gray-500 ring-2">x</button>
+            </div>
+
+            <p className="text-zinc-200 text-sm mt-2">
+              You have to sign in or register for further use of this feature :)<br /><br />
+              We need to do authentication for recognizing you and for properly showing your earned points!
+            </p>
+          </div>
+        </Modal>
+      }
 
       {isOpen &&
         <Modal>
@@ -146,32 +199,41 @@ function Vocabulary(props) {
               <button onClick={closeDialog} className="flex justify-center items-center w-8 h-8 bg-gray-600 self-start font-heading font-black rounded-full hover:ring ring-gray-500 ring-2">x</button>
             </div>
 
-            <div className="flex justify-center my-6">
-              <h1 key={score} className="text-3xl font-heading stacked-fractions"><div className="inline-block font-bold animate animate-num">{ score }</div> / { 5 * 50 }</h1>
+            <div className="flex justify-center mt-6">
+              <p className="font-medium text-zinc-200">Total: { total }</p>
             </div>
 
-            <RadioGroup className="mt-4" value={chosen} onChange={v => { check(v); }} disabled={disabled}>
-              <div>
-                <RadioGroup.Label className="text-lg font-semibold font-heading-2 text-gray-300">{ testQuestions[questionIndex].question }</RadioGroup.Label>
-                {testQuestions[questionIndex].answers.map((answer, j) => (
-                  <RadioGroup.Option
-                    value={answer}
-                    key={answer}
-                    className={({ checked }) =>
-                      `
-                      relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
-                      border border-slate-700 border-4
-                      hover:border-blue-700 box-border
-                      ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
-                      ${checked && result == 0 ? 'bg-green-500 border-green-500' : ''}
-                      ${checked && result == 1 ? 'bg-red-500 border-red-500' : ''}
-                      `
-                    }>
-                    <RadioGroup.Label>{ String.fromCharCode(j + 65) + ") " + answer }</RadioGroup.Label>
-                  </RadioGroup.Option>
-                ))}
+            <div className="flex justify-center mb-6">
+              <h1 key={score} className="text-3xl font-heading stacked-fractions"><div className="inline-block font-bold animate animate-num">{ score }</div> / { maxQns * 50 }</h1>
+            </div>
+
+            {!completed ?
+              <RadioGroup className="mt-4" value={chosen} onChange={v => { check(v); }} disabled={disabled}>
+                <div>
+                  <RadioGroup.Label className="text-lg font-semibold font-heading-2 text-gray-300">{ testQuestions[questionIndex].question }</RadioGroup.Label>
+                  {testQuestions[questionIndex].answers.map((answer, j) => (
+                    <RadioGroup.Option
+                      value={answer}
+                      key={answer}
+                      className={({ checked }) =>
+                        `
+                        relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
+                        border border-slate-700 border-4
+                        hover:border-blue-700 box-border
+                        ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
+                        ${checked && result == 0 ? 'bg-green-500 border-green-500' : ''}
+                        ${checked && result == 1 ? 'bg-red-500 border-red-500' : ''}
+                        `
+                      }>
+                      <RadioGroup.Label>{ String.fromCharCode(j + 65) + ") " + answer }</RadioGroup.Label>
+                    </RadioGroup.Option>
+                  ))}
+                </div>
+              </RadioGroup> :
+              <div className="py-6 flex justify-center text-2xl font-heading text-zinc-200">
+                🎉 Congratulations! You have succesfully completed your test!
               </div>
-            </RadioGroup>
+            }
           </div>
         </Modal>
       }

@@ -8,6 +8,7 @@ import {
 import { useState } from 'react'
 
 import Modal from './Modal'
+import Button from './Button'
 import SignInForm from './SignIn'
 import Account from './Account'
 
@@ -21,16 +22,16 @@ function Nav() {
       <nav className="bg-gray-800 h-14 flex justify-between items-center px-4 sm:px-6 lg:px-8">
         <div className="text-zinc-200 text-2xl font-bold font-nav-heading">Unordinary</div>
 
-        <div className="h-10 md:h-8 lg:h-6 aspect-square">
+        <div className="">
           <div onClick={() => setModalOpen(true)}>
             {
               user ?
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" className="fill-violet-500">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-              </svg> :
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" className="fill-gray-500">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-              </svg>
+              <div className="h-10 md:h-8 lg:h-6 aspect-square">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" className="fill-violet-500">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
+                </svg>
+              </div> :
+              <Button value="Sign In" />
             }
           </div>
         </div>

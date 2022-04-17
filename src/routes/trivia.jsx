@@ -5,7 +5,14 @@ import { RadioGroup } from '@headlessui/react'
 import Button from '../components/Button'
 import Loader from '../components/Loader'
 
+import { setDoc, doc, onSnapshot } from 'firebase/firestore'
+import { db, auth } from '../utils.js'
+import { useAuthState } from 'react-firebase-hooks/auth'
+
+let unsubscribe;
+
 function Trivia() {
+  const [user] = useAuthState(auth);
 
   const [trivia, setTrivia] = useState({
     question: [],
@@ -19,14 +26,42 @@ function Trivia() {
   // 2: not chosen
   const [result, setResult] = useState(2);
   const [isLoading, setIsLoading] = useState(true);
+  const [score, setScore] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  auth.onAuthStateChanged(u => {
+    if(u) {
+      unsubscribe = onSnapshot(
+        doc(db, "users", u.uid),
+        data => {
+          setTotal(data.data().score);
+        }
+      );
+    } else {
+      unsubscribe && unsubscribe();
+    }
+  });
+
+  const updateScore = (inc) => {
+    setScore(score + inc);
+    setDoc(doc(db, "users", user.uid), {
+      score: total + inc
+    }, { merge: true });
+  }
 
   const checkAnswer = () => {
     setDisabled(true);
 
-    if(chosenAnswer == trivia.correctAnswer)
+    if(chosenAnswer == trivia.correctAnswer) {
       setResult(0);
-    else
-      setResult(1);
+      updateScore(30);
+    } else {
+      setResult(1)
+    }
+
+    setTimeout(() => {
+      next();
+    }, 1500);
   }
 
   const fetchNewTrivia = () => {
@@ -58,6 +93,13 @@ function Trivia() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col items-center py-6">
+        <div className="">
+          <h1 className="text-2xl text-zinc-200 font-heading">Score: <span key={score} className="animate animate-num">{ score }</span></h1>
+        </div>
+        <h1 className="text-zinc-300 font-desc">Total: { total }</h1>
+      </div>
+
       <RadioGroup value={chosenAnswer} onChange={setChosenAnswer} disabled={disabled}>
         <RadioGroup.Label className="font-heading font-bold tracking-wide">{ trivia.question }</RadioGroup.Label>
         {trivia.answers.map((answer, i) => (
@@ -79,9 +121,8 @@ function Trivia() {
         ))}
       </RadioGroup>
 
-      <div className="flex justify-between md:justify-around ">
+      <div className="flex justify-center md:justify-around ">
         <Button value="Check" onClick={checkAnswer} />
-        <Button value="Next" onClick={next} />
       </div>
 
     </div>

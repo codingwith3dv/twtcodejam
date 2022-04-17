@@ -39,7 +39,7 @@ function SignInForm(props) {
 
   return (
     <div>
-      <div className="mt-4 flex flex-col gap-4 divide-y divide-gray-500 justify-between">
+      <div className="pt-4 flex flex-col gap-4 divide-y divide-gray-500 justify-between">
         { error &&
           <div className="w-full px-4 py-2 bg-red-700 bg-opacity-50 border-2 border-red-700 rounded-md text-zinc-300 text-sm font-desc font-semibold transition-all">
             { error }
@@ -77,7 +77,8 @@ function SignInForm(props) {
                 createUserWithEmailAndPassword(auth, email, password)
                   .then(async (u) => {
                     await setDoc(doc(db, "users", u.user.uid), {
-                      userName: userName
+                      userName: userName,
+                      score: 0
                     })
                   })
                   .catch(err => {
