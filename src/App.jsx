@@ -6,8 +6,15 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { useState, useEffect } from 'react'
 
+import {
+  TriviaIcon,
+  NewsIcon,
+  VocabularyIcon
+} from './images/svgs'
+
 const features = [
   {
+    icon: <TriviaIcon />,
     heading: 'Trivia',
     description: `
       Choose the right answer and you score, test your knowledge on various categories such as
@@ -17,6 +24,7 @@ const features = [
     route: '/trivia'
   },
   {
+    icon: <NewsIcon />,
     heading: 'Daily News',
     description: `
       Getting to know about things around the world... Everyday different things happen
@@ -25,6 +33,7 @@ const features = [
     route: '/news'
   },
   {
+    icon: <VocabularyIcon />,
     heading: 'More Vocabulary',
     description: `
       Understanding what a word means is so much important. Vocabulary is the foundation for good
@@ -56,13 +65,13 @@ function Feed() {
     <div className="px-4 pt-4 md:px-6 md:pt-6 lg:px-8 lg:pt-8">
       <h1 className="text-2xl font-heading text-zinc-300 font-bold mb-4">Your Feed</h1>
       <section className="flex flex-col md:flex-row md:h-96 gap-4">
-        <div className="md:w-72 bg-gray-800 p-4 md:p-6 lg:p-8 rounded-lg flex flex-col h-full overflow-y-scroll">
-          <h1 className="font-heading text-xl text-violet-400 font-bold">Quote of the day</h1>
+        <div className="md:w-72 border border-gray-800 p-4 md:p-6 lg:p-8 rounded-lg flex flex-col h-full overflow-y-scroll">
+          <h1 className="font-heading text-xl text-accent-2 font-bold">Quote of the day</h1>
           <h1 className="font-heading font-medium text-zinc-300">{ quote?.content }</h1>
           <h1 className="font-heading-2 font-light text-zinc-400 italic mt-auto">- { quote?.author }</h1>
         </div>
-        <div className="p-4 md:p-6 lg:p-8 w-full bg-gray-800 rounded-lg h-96 md:h-full overflow-y-scroll">
-          <h1 className="text-xl text-violet-400 font-heading font-bold sticky">{ poem?.title } by { poem.author }</h1>
+        <div className="p-4 md:p-6 lg:p-8 w-full border border-gray-800 rounded-lg h-96 md:h-full overflow-y-scroll">
+          <h1 className="text-xl text-accent-2 font-heading font-bold sticky">{ poem?.title } by { poem.author }</h1>
           <div className="font-heading font-medium text-zinc-300">
           {poem.lines?.map(line => (
             <p>{ line }</p>
@@ -70,6 +79,20 @@ function Feed() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+function About() {
+  return (
+    <div className="bg-gray-800 p-4">
+      <h1 className="text-xl font-heading font-bold text-zinc-200">About</h1>
+      <h2 className="text-sm font-heading-2 font-semibold text-zinc-300">A website made for making each day unordinary</h2>
+      <div className="grid grid-cols-2 my-2 font-desc text-md font-medium">
+        <a href="https://github.com/codingwith3dv/go-of-beat">Github</a>
+        <a href="https://twitter.com/cw3dv">Twitter</a>
+      </div>
+      <h1>Made with <span className="text-blue-300">React + Tailwind</span></h1>
     </div>
   );
 }
@@ -111,6 +134,7 @@ function App() {
         </div>
       </div>
 
+      <About />
     </div>
   )
 }

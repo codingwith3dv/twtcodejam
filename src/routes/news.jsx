@@ -3,17 +3,18 @@ import { useState, useEffect} from 'react'
 import Loader from '../components/Loader'
 
 const NewsCard = (props) => {
-  let str = props?.content;
-  let content = str?.slice(0, str?.lastIndexOf("["));
+  let str = props.description;
+  const MAX = 200;
+  if(str.length > MAX) str = str.slice(0, MAX);
 
   return (
-    <a href={ props.url } target="blank">
+    <a href={ props?.link } target="blank">
       <div className="flex flex-col p-4 h-full rounded-lg bg-slate-800 shadow-md hover:shadow-zinc-700 hover:shadow-md transition-all delay-75 border border-slate-700">
-        <img className="w-full h-40 max-h-40 bg-slate-300 rounded-md mb-4" src={ props.urlToImage } />
+        <img className="w-full h-40 max-h-40 bg-slate-300 rounded-md mb-4" src={ props?.image_url ? props.image_url : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdSrBEweHrwBRQ2r_57XFhloOzHP8REcLGPw&usqp=CAU' } />
         <div className="flex flex-col h-full">
           <h1 className="font-semibold text-xl font-heading-2">{ props.title }</h1>
-          <p className="my-2 text-sm">{ content }</p>
-          <p className="mt-auto">Source: <p className="font-medium inline">{ props.source.name }</p></p>
+          <p className="my-2 text-sm">{ str }</p>
+          <p className="mt-auto">Source: <p className="font-medium inline">{ props.source_id }</p></p>
         </div>
       </div>
     </a>
@@ -59,12 +60,12 @@ function News() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchLatestHeadlines = () => {
-    fetch("https://newsapi.org/v2/top-headlines?country=us&apiKey=f2dc7b0c44d14a6f8f3481349183054e")
-    .then(res => res.json())
-    .then(res => {
-      setArticles(res.articles);
-      setIsLoading(false);
-    })
+    fetch("https://newsdata.io/api/1/news?apikey=pub_66185f045c872f203b5bfbd82f50c5873007&language=en&country=us,gb")
+      .then(res => res.json())
+      .then(res => {
+        setArticles(res.results);
+        setIsLoading(false);
+      })
   }
 
   useEffect(fetchLatestHeadlines, []);

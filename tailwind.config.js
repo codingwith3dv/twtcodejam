@@ -10,7 +10,8 @@ module.exports = {
         'desc': ['"Lato"'],
       },
       colors: {
-        'accent': '#7c3aed'
+        'accent': '#7c3aed',
+        'accent-2': "#cbb8ff"
       },
       animation: {
         'num': 'num 300ms linear'
