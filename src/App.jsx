@@ -62,7 +62,7 @@ function Feed() {
   useEffect(getQuoteAndPoem, []);
 
   return (
-    <div className="px-4 pt-4 md:px-6 md:pt-6 lg:px-8 lg:pt-8">
+    <div className="px-4 pt-4 md:px-6 md:pt-6 lg:px-8 lg:pt-8 mb-4 md:mb-6 lg:mb-8">
       <h1 className="text-2xl font-heading text-zinc-300 font-bold mb-4">Your Feed</h1>
       <section className="flex flex-col md:flex-row md:h-96 gap-4">
         <div className="md:w-72 border border-gray-800 p-4 md:p-6 lg:p-8 rounded-lg flex flex-col h-full overflow-y-scroll">
@@ -85,10 +85,10 @@ function Feed() {
 
 function About() {
   return (
-    <div className="bg-gray-800 p-4">
+    <div className="p-4 md:p-6 lg:p-8">
       <h1 className="text-xl font-heading font-bold text-zinc-200">About</h1>
       <h2 className="text-sm font-heading-2 font-semibold text-zinc-300">A website made for making each day unordinary</h2>
-      <div className="grid grid-cols-2 my-2 font-desc text-md font-medium">
+      <div className="grid grid-cols-1 gap-2 my-2 font-desc text-md font-medium">
         <a href="https://github.com/codingwith3dv/go-of-beat">Github</a>
         <a href="https://twitter.com/cw3dv">Twitter</a>
       </div>
@@ -101,7 +101,7 @@ function App() {
   const [user] = useAuthState(auth);
 
   return (
-    <div>
+    <div className="flex flex-col divide divide-y-2 divide-gray-700">
       {user ?
         <Feed /> :
 
@@ -122,8 +122,8 @@ function App() {
           </section>
         </div>
       }
-      <h1 className="px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 text-2xl font-heading text-zinc-300 font-bold">Features</h1>
-      <div className="flex justify-center">
+      <div className="flex flex-col justify-center">
+        <h1 className="px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 text-2xl font-heading text-zinc-300 font-bold">Features</h1>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 lg:max-w-4xl gap-4 p-4 sm:p-6 lg:p-8">
           {features.map(feature => (
             <FeatureCard

@@ -9,7 +9,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  GithubAuthProvider
 } from 'firebase/auth'
 import {
   setDoc, doc
@@ -137,6 +138,14 @@ function SignInForm(props) {
               border-accent font-bold text-violet-300
             "
             onClick={() => {
+              signInWithPopup(auth, new GithubAuthProvider())
+                .then(async(res) => {
+                  await setDoc(doc(db, "users", res.user.uid), {
+                    userName: res.user.displayName,
+                    score: 0,
+                    maxQns: 5
+                  })
+                })
             }}
             >
             Continue With Github

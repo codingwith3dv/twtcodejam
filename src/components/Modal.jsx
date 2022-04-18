@@ -6,7 +6,9 @@ function Modal(props) {
       inset-0 z-50 outline-none focus:outline-none
       bg-black bg-opacity-50 filter
       backdrop-blur-sm">
-      { props.children }
+      <div>
+        { props.children }
+      </div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ import ScrollToTop from './components/ScrollToTop'
 ReactDOM.render(
   <React.StrictMode>
     <Nav />
-    <main className="min-h-screen bg-slate-900 text-zinc-200 scroll-smooth">
+    <main className="bg-slate-900 text-zinc-200 scroll-smooth">
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
