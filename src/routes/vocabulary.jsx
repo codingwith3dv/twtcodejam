@@ -159,6 +159,7 @@ function Vocabulary() {
 
   const check = (value) => {
     setDisabled(true);
+    setChosen(value);
 
     let currentQuestion = testQuestions[questionIndex];
     if(currentQuestion.correctAnswer == value) {
@@ -168,7 +169,6 @@ function Vocabulary() {
       setResult(1);
     }
 
-    setChosen(value);
     next();
   }
 
@@ -215,7 +215,7 @@ function Vocabulary() {
             </div>
 
             {!completed ?
-              <RadioGroup className="mt-4" value={chosen} onChange={v => { check(v); }} disabled={disabled}>
+              <RadioGroup className="mt-4" value={chosen} onChange={val => { check(val); }} disabled={disabled}>
                 <div>
                   <RadioGroup.Label className="text-lg font-semibold font-heading-2 text-gray-300">{ testQuestions[questionIndex].question }</RadioGroup.Label>
                   {testQuestions[questionIndex].answers.map((answer, j) => (
@@ -227,9 +227,9 @@ function Vocabulary() {
                         relative rounded-md my-2 px-4 py-2 transition-all ease-in-out delay-75 font-heading-2
                         border border-slate-700 border-4
                         hover:border-blue-700 box-border
-                        ${checked ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
+                        ${checked && result == 2 ? 'bg-blue-600 font-semibold text-zinc-100' : ''}
                         ${checked && result == 0 ? 'bg-green-500 border-green-500' : ''}
-                        ${result == 1 ? 'bg-red-500 border-red-500' : ''}
+                        ${checked && result == 1 ? 'bg-red-500 border-red-500' : ''}
                         `
                       }>
                       <RadioGroup.Label>{ String.fromCharCode(j + 65) + ") " + answer }</RadioGroup.Label>

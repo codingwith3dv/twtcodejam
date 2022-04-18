@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'nav-heading': ['"Exo"'],
+        'nav-heading': ['"Work Sans"'],
         'heading': ['"Rubik"'],
         'heading-2': ['"Ubuntu"'],
         'desc': ['"Lato"'],

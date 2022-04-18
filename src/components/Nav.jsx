@@ -20,7 +20,7 @@ function Nav() {
   return (
     <div>
       <nav className="bg-gray-800 h-14 flex justify-between items-center px-4 sm:px-6 lg:px-8">
-        <div className="text-zinc-200 text-2xl font-bold font-nav-heading">Unordinary</div>
+        <div className="text-zinc-200 text-2xl font-bold font-nav-heading">Go Of <span className="text-violet-400">Beat</span></div>
 
         <div className="">
           <div onClick={() => setModalOpen(true)}>
